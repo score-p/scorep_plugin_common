@@ -62,15 +62,15 @@ endif()
 # Search in the user given locations at first.
 if(FreeIPMI_ROOT_DIR)
     set(_freeIPMI_HEADER_SEARCH_DIRS "${FreeIPMI_ROOT_DIR}"
-                                  "${FreeIPMI_ROOT_DIR}/include"
-                                  "{_freeIPMI_HEADER_SEARCH_DIRS}")
+                                     "${FreeIPMI_ROOT_DIR}/include"
+                                     "{_freeIPMI_HEADER_SEARCH_DIRS}")
     set(_freeIPMI_LIBRARY_SEARCH_DIRS "${FreeIPMI_ROOT_DIR}"
-                                   "{_freeIPMI_HEADER_SEARCH_DIRS}")
+                                      "{_freeIPMI_HEADER_SEARCH_DIRS}")
 endif()
 
 # Now find that header and that library!
-find_path(FreeIPMI_INCLUDE_DIR "freeIPMI.h" PATHS ${_freeIPMI_HEADER_SEARCH_DIRS})
-find_library(FreeIPMI_LIBRARY NAMES "libfreeIPMI" "freeIPMI" HINTS ${_freeIPMI_LIBRARY_SEARCH_DIRS})
+find_path(FreeIPMI_INCLUDE_DIR "freeipmi.h" PATHS ${_freeIPMI_HEADER_SEARCH_DIRS})
+find_library(FreeIPMI_LIBRARY NAMES "libfreeipmi" "freeipmi" HINTS ${_freeIPMI_LIBRARY_SEARCH_DIRS})
 
 # Handle the standard args
 include(FindPackageHandleStandardArgs)
