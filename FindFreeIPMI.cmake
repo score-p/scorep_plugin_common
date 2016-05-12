@@ -1,14 +1,14 @@
-# FindHDEEM - tries to find the hdeem library.
+# FindFreeIPMI - tries to find the FreeIPMI library.
 #
 # -------------------------------------------------------------------------------------------------
 #
 # On success, this module defines the following variables:
-#   HDEEM_INCLUDE_DIRS              -   The path to find hdeem.h in.
-#   HDEEM_LIBRARIES                 -   The path to find libhdeem.so in.
+#   FreeIPMI_INCLUDE_DIRS           -   The path to find freeIPMI.h in.
+#   FreeIPMI_LIBRARIES              -   The path to find libfreeIPMI.so in.
 #
-# This module will try to find hdeem in some standard paths but you can give a hint with the
+# This module will try to find freeIPMI in some standard paths but you can give a hint with the
 # following variable:
-#   HDEEM_ROOT_DIR                  -   A path to look for hdeem. Can be set as a parameter for
+#   FreeIPMI_ROOT_DIR               -   A path to look for freeIPMI. Can be set as a parameter for
 #                                       CMake or as an environment variable.
 #
 # -------------------------------------------------------------------------------------------------
@@ -42,40 +42,40 @@
 # -------------------------------------------------------------------------------------------------
 
 # Default search paths
-set(_hdeem_HEADER_SEARCH_DIRS
+set(_freeIPMI_HEADER_SEARCH_DIRS
         "/usr/include"
-        "/usr/include/hdeem"
+        "/usr/include/freeipmi"
         "/usr/local/include")
-        "/usr/local/include/hdeem")
-set(_hdeem_LIBRARY_SEARCH_DIRS
+        "/usr/local/include/freeipmi")
+set(_freeIPMI_LIBRARY_SEARCH_DIRS
         "/usr/lib/")
         "/usr/lib64/")
 
 # Environment variable
-set(_hdeem_ENV_ROOT_DIR "$ENV{HDEEM_ROOT_DIR}")
+set(_freeIPMI_ENV_ROOT_DIR "$ENV{FreeIPMI_ROOT_DIR}")
 
 # If only the environment variable is given, override CMake parameter.
-if(NOT HDEEM_ROOT_DIR AND _hdeem_ENV_ROOT_DIR)
-    set(HDEEM_ROOT_DIR "${_hdeem_ENV_ROOT_DIR}")
+if(NOT FreeIPMI_ROOT_DIR AND _freeIPMI_ENV_ROOT_DIR)
+    set(FreeIPMI_ROOT_DIR "${_freeIPMI_ENV_ROOT_DIR}")
 endif()
 
 # Search in the user given locations at first.
-if(HDEEM_ROOT_DIR)
-    set(_hdeem_HEADER_SEARCH_DIRS "${HDEEM_ROOT_DIR}"
-                                  "${HDEEM_ROOT_DIR}/include"
-                                  "{_hdeem_HEADER_SEARCH_DIRS}")
-    set(_hdeem_LIBRARY_SEARCH_DIRS "${HDEEM_ROOT_DIR}"
-                                   "{_hdeem_HEADER_SEARCH_DIRS}")
+if(FreeIPMI_ROOT_DIR)
+    set(_freeIPMI_HEADER_SEARCH_DIRS "${FreeIPMI_ROOT_DIR}"
+                                  "${FreeIPMI_ROOT_DIR}/include"
+                                  "{_freeIPMI_HEADER_SEARCH_DIRS}")
+    set(_freeIPMI_LIBRARY_SEARCH_DIRS "${FreeIPMI_ROOT_DIR}"
+                                   "{_freeIPMI_HEADER_SEARCH_DIRS}")
 endif()
 
 # Now find that header and that library!
-find_path(HDEEM_INCLUDE_DIR "hdeem.h" PATHS ${_hdeem_HEADER_SEARCH_DIRS})
-find_library(HDEEM_LIBRARY NAMES "libhdeem" "hdeem" HINTS ${_hdeem_LIBRARY_SEARCH_DIRS})
+find_path(FreeIPMI_INCLUDE_DIR "freeIPMI.h" PATHS ${_freeIPMI_HEADER_SEARCH_DIRS})
+find_library(FreeIPMI_LIBRARY NAMES "libfreeIPMI" "freeIPMI" HINTS ${_freeIPMI_LIBRARY_SEARCH_DIRS})
 
 # Handle the standard args
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(HDEEM DEFAULT_MSG HDEEM_LIBRARY HDEEM_INCLUDE_DIR)
+find_package_handle_standard_args(FreeIPMI DEFAULT_MSG FreeIPMI_LIBRARY FreeIPMI_INCLUDE_DIR)
 
-mark_as_advanced(HDEEM_INCLUDE_DIR HDEEM_LIBRARY)
-set(HDEEM_LIBRARIES "${HDEEM_LIBRARY}")
-set(HDEEM_INCLUDE_DIRS "${HDEEM_INCLUDE_DIR}")
+mark_as_advanced(FreeIPMI_INCLUDE_DIR FreeIPMI_LIBRARY)
+set(FreeIPMI_LIBRARIES "${FreeIPMI_LIBRARY}")
+set(FreeIPMI_INCLUDE_DIRS "${FreeIPMI_INCLUDE_DIR}")
