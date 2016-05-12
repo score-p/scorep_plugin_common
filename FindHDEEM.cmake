@@ -45,10 +45,10 @@
 set(_hdeem_HEADER_SEARCH_DIRS
         "/usr/include"
         "/usr/include/hdeem"
-        "/usr/local/include")
+        "/usr/local/include"
         "/usr/local/include/hdeem")
 set(_hdeem_LIBRARY_SEARCH_DIRS
-        "/usr/lib/")
+        "/usr/lib/"
         "/usr/lib64/")
 
 # Environment variable

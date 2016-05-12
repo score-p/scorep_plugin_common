@@ -45,10 +45,10 @@
 set(_freeIPMI_HEADER_SEARCH_DIRS
         "/usr/include"
         "/usr/include/freeipmi"
-        "/usr/local/include")
+        "/usr/local/include"
         "/usr/local/include/freeipmi")
 set(_freeIPMI_LIBRARY_SEARCH_DIRS
-        "/usr/lib/")
+        "/usr/lib/"
         "/usr/lib64/")
 
 # Environment variable
