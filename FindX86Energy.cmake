@@ -23,32 +23,31 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#Input Options
-option(X86E_STATIC "Link x86_energy library static." ON)
-option(X86E_DIR "Path to libx86_energy directory" "")
-option(X86E_INC "Path to libx86_energy headers" "")
-option(X86E_LIB "Path to libx86_energy library" "")
+option(X86Energy_STATIC "Link x86_energy library static." ON)
 
-if(X86E_STATIC)
+if(NOT X86Energy_STATIC STREQUAL OLD_X86E_STATIC)
+    set(OLD_X86E_STATIC ${X86Energy_STATIC} CACHE INTERNAL "previous value of X86Energy_STATIC")
+    unset(X86_ENERGY_LIBRARIES CACHE)
+endif()
+
+if(X86Energy_STATIC)
    set(LIBX86E_NAME libx86_energy_static.a)
 else()
    set(LIBX86E_NAME libx86_energy.so)
 endif()
 
-find_path(X86_ENERGY_LIB_DIR ${LIBX86E_NAME} HINTS ${X86E_LIB} ${X86E_DIR}/lib ${X86E_DIR}/build  ENV LD_LIBRARY_PATH DOC "Path to libx86_energy")
+if (X86_ENERGY_LIBRARIES AND X86_ENERGY_INCLUDE_DIRS)
+  set (X86Energy_FIND_QUIETLY TRUE)
+endif (X86_ENERGY_LIBRARIES AND X86_ENERGY_INCLUDE_DIRS)
 
-if( X86_ENERGY_LIB_DIR )
-    message(STATUS "FOUND: ${X86E_DIR}")
-    message(STATUS "FOUND: ${X86_ENERGY_LIB_DIR}")
+find_path(X86_ENERGY_INCLUDE_DIRS NAMES x86_energy.h)
+find_library(X86_ENERGY_LIBRARIES NAMES ${LIBX86E_NAME})
 
-    find_path(X86_ENERGY_INC_DIR x86_energy.h HINTS ${X86E_INC} ${X86E_DIR} ${X86_ENERGY_LIB_DIR}/../include ${X86E_DIR}/include ${X86E_DIR}/library DOC "Path to x86_energy.h")
+include (FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(X86Energy DEFAULT_MSG
+  X86_ENERGY_LIBRARIES
+  X86_ENERGY_INCLUDE_DIRS)
 
-    if( X86_ENERGY_INC_DIR )
-        message(STATUS "FOUND: ${X86_ENERGY_INC_DIR}")
-        set(X86_ENERGY_FOUND true)
-    else()
-        message(STATUS "Could NOT find libx86_energy header (missing: X86E_DIR / X86E_INC )")
-    endif()
-else()
-    message(STATUS "Could NOT find ${LIBX86E_NAME} (missing: X86E_DIR / X86E_LIB )")
-endif()
+mark_as_advanced(X86_ENERGY_INCLUDE_DIRS X86_ENERGY_LIBRARIES)
+
+unset(LIBX86E_NAME)
