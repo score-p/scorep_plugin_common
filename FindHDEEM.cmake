@@ -65,6 +65,8 @@ if(HDEEM_ROOT_DIR)
                                   "${HDEEM_ROOT_DIR}/include"
                                   "{_hdeem_HEADER_SEARCH_DIRS}")
     set(_hdeem_LIBRARY_SEARCH_DIRS "${HDEEM_ROOT_DIR}"
+                                   "${HDEEM_ROOT_DIR}/lib"
+                                   "${HDEEM_ROOT_DIR}/lib64"
                                    "{_hdeem_HEADER_SEARCH_DIRS}")
 endif()
 
