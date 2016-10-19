@@ -23,18 +23,30 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-find_path(X86_ADAPT_LIB_DIR ${LIBX86A_NAME} HINTS ${X86A_LIB} ${X86A_DIR}/lib ENV LD_LIBRARY_PATH DOC "Path to libx86_adapt")
+include(${CMAKE_CURRENT_LIST_DIR}/UnsetIfUpdated.cmake)
 
-if( X86_ADAPT_LIB_DIR )
+option(X86Adapt_STATIC "Link x86_adapt library static." ON)
 
+UnsetIfUpdated(X86_ADAPT_LIBRARIES X86Adapt_STATIC)
 
-    find_path(X86_ADAPT_INC_DIR x86_adapt.h HINTS ${X86A_INC} ${X86_ADAPT_LIB_DIR}/../include ${X86A_DIR}/include DOC "Path to x86_adapt.h")
-
-    if( X86_ADAPT_INC_DIR )
-        set(X86_ADAPT_FOUND true)
-    else()
-        message(STATUS "Could NOT find libx86_adapt header (missing: X86A_DIR / X86A_INC )")
-    endif()
+if(X86Adapt_STATIC)
+   set(LIBX86A_NAME libx86_adapt_static.a)
 else()
-    message(STATUS "Could NOT find ${LIBX86A_NAME} (missing: X86A_DIR / X86A_LIB )")
+   set(LIBX86A_NAME libx86_adapt.so)
 endif()
+
+if (X86_ADAPT_LIBRARIES AND X86_ADAPT_INCLUDE_DIRS)
+  set (X86Adapt_FIND_QUIETLY TRUE)
+endif (X86_ADAPT_LIBRARIES AND X86_ADAPT_INCLUDE_DIRS)
+
+find_path(X86_ADAPT_INCLUDE_DIRS NAMES x86_adapt.h)
+find_library(X86_ADAPT_LIBRARIES NAMES ${LIBX86A_NAME})
+
+include (FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(X86Adapt DEFAULT_MSG
+  X86_ADAPT_LIBRARIES
+  X86_ADAPT_INCLUDE_DIRS)
+
+mark_as_advanced(X86_ADAPT_INCLUDE_DIRS X86_ADAPT_LIBRARIES)
+
+unset(LIBX86A_NAME)
