@@ -23,19 +23,18 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-find_path(PAPI_LIB_DIR libpapi.so HINTS ${PAPI_LIB} ${PAPI_DIR}/lib ENV LD_LIBRARY_PATH DOC "Path to PAPI")
 
-if( PAPI_LIB_DIR )
+# Find libdataheap
+if (PAPI_LIBRARIES AND PAPI_INCLUDE_DIRS)
+  set (PAPI_FIND_QUIETLY TRUE)
+endif (PAPI_LIBRARIES AND PAPI_INCLUDE_DIRS)
 
+find_path(PAPI_INCLUDE_DIRS NAMES papi.h HINTS ENV C_INCLUDE_PATH)
+find_library(PAPI_LIBRARIES NAMES papi HINTS ENV LD_LIBRARY_PATH)
 
-    find_path(PAPI_INC_DIR papi.h HINTS ${PAPI_INC} ${PAPI_LIB_DIR}/../include ${PAPI_DIR}/include DOC "Path to papi.h")
+include (FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(PAPI DEFAULT_MSG
+  PAPI_LIBRARIES
+  PAPI_INCLUDE_DIRS)
 
-    if( PAPI_INC_DIR )
-        set(PAPI_FOUND true)
-    else()
-        message(STATUS "Could NOT find PAPI header (missing: PAPI_DIR / PAPI_INC )")
-    endif()
-else()
-    set(PAPI_FOUND false)
-    message(STATUS "Could NOT find PAPI (missing: PAPI_DIR / PAPI_LIB )")
-endif()
+mark_as_advanced(PAPI_INCLUDE_DIRS PAPI_LIBRARIES)
