@@ -43,10 +43,25 @@ ELSE(NOT SCOREP_CONFIG)
 
     message(STATUS "SCOREP library found. (using ${SCOREP_CONFIG})")
 
-    execute_process(COMMAND ${SCOREP_CONFIG} "--user" "--cppflags" OUTPUT_VARIABLE SCOREP_INCLUDE_DIRS)
-    STRING(REPLACE "-I" ";" SCOREP_INCLUDE_DIRS ${SCOREP_INCLUDE_DIRS})
+    execute_process(COMMAND ${SCOREP_CONFIG} "--user" "--cppflags" OUTPUT_VARIABLE SCOREP_CONFIG_FLAGS)
 
-    execute_process(COMMAND ${SCOREP_CONFIG} "--user" "--ldflags" OUTPUT_VARIABLE _LINK_LD_ARGS)
+    string(REGEX MATCHALL "-I[^ ]*" SCOREP_CONFIG_INCLUDES "${SCOREP_CONFIG_FLAGS}")
+    foreach(inc ${SCOREP_CONFIG_INCLUDES})
+        string(SUBSTRING ${inc} 2 -1 inc)
+        list(APPEND SCOREP_INCLUDE_DIRS ${inc})
+    endforeach()
+   
+    string(REGEX MATCHALL "(^| +)-[^I][^ ]*" SCOREP_CONFIG_CXXFLAGS "${SCOREP_CONFIG_FLAGS}")
+    foreach(flag ${SCOREP_CONFIG_CXXFLAGS})
+        string(STRIP ${flag} flag)
+        list(APPEND SCOREP_CXX_FLAGS ${flag})
+    endforeach()
+ 
+    unset(SCOREP_CONFIG_FLAGS)
+    unset(SCOREP_CONFIG_INCLUDES)
+    unset(SCOREP_CONFIG_CXXFLAGS)
+
+    execute_process(COMMAND ${SCOREP_CONFIG} "--ldflags" OUTPUT_VARIABLE _LINK_LD_ARGS)
     STRING( REPLACE " " ";" _LINK_LD_ARGS ${_LINK_LD_ARGS} )
     FOREACH( _ARG ${_LINK_LD_ARGS} )
         IF(${_ARG} MATCHES "^-L")
@@ -55,7 +70,7 @@ ELSE(NOT SCOREP_CONFIG)
         ENDIF(${_ARG} MATCHES "^-L")
     ENDFOREACH(_ARG)
 
-    execute_process(COMMAND ${SCOREP_CONFIG} "--user" "--libs" OUTPUT_VARIABLE _LINK_LD_ARGS)
+    execute_process(COMMAND ${SCOREP_CONFIG} "--libs" OUTPUT_VARIABLE _LINK_LD_ARGS)
     STRING( REPLACE " " ";" _LINK_LD_ARGS ${_LINK_LD_ARGS} )
     FOREACH( _ARG ${_LINK_LD_ARGS} )
         IF(${_ARG} MATCHES "^-l")
