@@ -50,13 +50,13 @@ ELSE(NOT SCOREP_CONFIG)
         string(SUBSTRING ${inc} 2 -1 inc)
         list(APPEND SCOREP_INCLUDE_DIRS ${inc})
     endforeach()
-   
+
     string(REGEX MATCHALL "(^| +)-[^I][^ ]*" SCOREP_CONFIG_CXXFLAGS "${SCOREP_CONFIG_FLAGS}")
     foreach(flag ${SCOREP_CONFIG_CXXFLAGS})
         string(STRIP ${flag} flag)
         list(APPEND SCOREP_CXX_FLAGS ${flag})
     endforeach()
- 
+
     unset(SCOREP_CONFIG_FLAGS)
     unset(SCOREP_CONFIG_INCLUDES)
     unset(SCOREP_CONFIG_CXXFLAGS)
@@ -88,5 +88,25 @@ ELSE(NOT SCOREP_CONFIG)
 
     set(SCOREP_FOUND true)
 ENDIF(NOT SCOREP_CONFIG)
+
+include (FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(
+    Scorep DEFAULT_MSG
+    SCOREP_CONFIG
+    SCOREP_LIBRARIES
+    SCOREP_INCLUDE_DIRS
+)
+
+add_library(Scorep::Scorep UNKNOWN IMPORTED)
+set_target_properties(Scorep::Scorep PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${SCOREP_INCLUDE_DIRS}"
+    IMPORTED_LINK_INTERFACE_LIBRARIES "${SCOREP_LIBRARIES}"
+    IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+)
+
+add_library(Scorep::Plugin INTERFACE IMPORTED)
+set_target_properties(Scorep::Plugin PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${SCOREP_INCLUDE_DIRS}"
+)
 
 mark_as_advanced(SCOREP_CONFIG)
