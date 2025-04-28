@@ -36,12 +36,8 @@ ELSE(SCOREP_CONFIG_PATH)
     )
 ENDIF(SCOREP_CONFIG_PATH)
 
-IF(NOT SCOREP_CONFIG)
-    MESSAGE(STATUS "no scorep-config found")
-    set(SCOREP_FOUND false)
-ELSE(NOT SCOREP_CONFIG)
-
-    message(STATUS "SCOREP library found. (using ${SCOREP_CONFIG})")
+if(SCOREP_CONFIG)
+    message(STATUS "scorep-config found")
 
     execute_process(COMMAND ${SCOREP_CONFIG} "--user" "--cppflags" OUTPUT_VARIABLE SCOREP_CONFIG_FLAGS)
 
@@ -86,8 +82,7 @@ ELSE(NOT SCOREP_CONFIG)
         ENDIF(${_ARG} MATCHES "^-l")
     ENDFOREACH(_ARG)
 
-    set(SCOREP_FOUND true)
-ENDIF(NOT SCOREP_CONFIG)
+endif()
 
 include (FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(
